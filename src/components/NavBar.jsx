@@ -1,5 +1,6 @@
 import { Sun, Moon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 const NavBar = () => {
     const [theme, setTheme] = useState("dracula");
 
@@ -8,11 +9,11 @@ const NavBar = () => {
       setTheme(newTheme);
       document.documentElement.setAttribute("data-theme", newTheme);
     };
+  
+  // setting up profile-img
+  const user = useSelector((state) => state.user);
 
-    // Optional: set default theme on mount
-    useEffect(() => {
-      document.documentElement.setAttribute("data-theme", theme);
-    }, [theme]);
+  console.log(user);
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
@@ -37,37 +38,37 @@ const NavBar = () => {
         </button>
 
         {/* Profile Dropdown */}
-        <div className="dropdown dropdown-end mx-5">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              <img
-                alt="User avatar"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
+        {user && (
+          <div className="dropdown flex dropdown-end mx-5">
+            <p className="px-4 self-center">Welcome, {user.firstName}</p>
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img alt="User photo" src={user.photoUrl} />
+              </div>
             </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <a className="justify-between">
+                  Profile
+                  <span className="badge">New</span>
+                </a>
+              </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li>
+                <a>Logout</a>
+              </li>
+            </ul>
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
-            </li>
-          </ul>
-        </div>
+        )}
       </div>
     </div>
   );
