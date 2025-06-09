@@ -1,6 +1,7 @@
 import { Sun, Moon } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 const NavBar = () => {
     const [theme, setTheme] = useState("dracula");
 
@@ -11,14 +12,14 @@ const NavBar = () => {
     };
   
   // setting up profile-img
-  const user = useSelector((state) => state.user);
+  const user = useSelector((store) => store.user);
 
   console.log(user);
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl gap-2">🧑‍💻 DevTinder</a>
+        <Link to="/" className="btn btn-ghost text-xl gap-2">🧑‍💻 DevTinder</Link>
       </div>
 
       <div className="flex gap-3 items-center">
@@ -55,10 +56,10 @@ const NavBar = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a className="justify-between">
+                <Link to="/profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
-                </a>
+                </Link>
               </li>
               <li>
                 <a>Settings</a>
