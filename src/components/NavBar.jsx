@@ -1,10 +1,14 @@
+import axios from "axios";
 import { Sun, Moon } from "lucide-react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { removeUser } from "../utils/userSlice";
 const NavBar = () => {
     const [theme, setTheme] = useState("dracula");
-
+    const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
     const toggleTheme = () => {
       const newTheme = theme === "dracula" ? "light" : "dracula";
       setTheme(newTheme);
@@ -14,7 +18,15 @@ const NavBar = () => {
   // setting up profile-img
   const user = useSelector((store) => store.user);
 
-  console.log(user);
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_SERVER_BACKEND_BASEURL}/logout`, {}, { withCredentials: true });
+      dispatch(removeUser());
+      return navigate("/login");
+    } catch (error) {
+      console.log(error);      
+    }
+  }
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
@@ -62,10 +74,10 @@ const NavBar = () => {
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link>Settings</Link>
               </li>
               <li>
-                <a>Logout</a>
+                <Link onClick={handleLogout}>Logout</Link>
               </li>
             </ul>
           </div>

@@ -8,8 +8,9 @@ const Login = () => {
   //TODO: modify the State
   const [emailId, setEmailId] = useState("akshay@gmail.com");
   const [password, setPassword] = useState("Akshay@098");
-  const dispatch = useDispatch();
+  const [error, setError] = useState("");
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -25,10 +26,11 @@ const Login = () => {
       // console.log(res.data.data.user);
       dispatch(addUser(res.data?.data?.user));
       navigate("/");
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      setError(err?.response?.data || "Something went wrong");
     }
   };
+
 
   return (
     <div className="flex justify-center mt-10">
@@ -55,6 +57,7 @@ const Login = () => {
               />
             </fieldset>
           </div>
+          <p className="text-error mx-auto">{error}</p>
           <div className="card-actions justify-center py-4">
             <button
               className="btn btn-primary"
