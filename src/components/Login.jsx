@@ -9,7 +9,7 @@ const Login = () => {
   const [emailId, setEmailId] = useState("akshay@gmail.com");
   const [password, setPassword] = useState("Akshay@098");
   const [error, setError] = useState("");
-
+  const [showToast, setShowToast] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,48 +28,60 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setError(err?.response?.data || "Something went wrong");
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
     }
   };
 
-
   return (
-    <div className="flex justify-center mt-10">
-      <div className="card bg-base-300 w-96 shadow-sm">
-        <div className="card-body">
-          <h2 className="card-title justify-center">Login</h2>
-          <div className="mb-2">
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Email ID</legend>
-              <input
-                type="text"
-                value={emailId}
-                className="input"
-                onChange={(e) => setEmailId(e.target.value)}
-              />
-            </fieldset>
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Password</legend>
-              <input
-                type="password"
-                value={password}
-                className="input"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </fieldset>
-          </div>
-          <p className="text-error mx-auto">{error}</p>
-          <div className="card-actions justify-center py-4">
-            <button
-              className="btn btn-primary"
-              disabled={!emailId || !password}
-              onClick={handleLogin}
-            >
-              Login
-            </button>
+    <>
+      <div className="flex justify-center mt-10">
+        <div className="card bg-base-300 w-96 shadow-sm">
+          <div className="card-body">
+            <h2 className="card-title justify-center">Login</h2>
+            <div className="mb-2">
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Email ID</legend>
+                <input
+                  type="text"
+                  value={emailId}
+                  className="input"
+                  onChange={(e) => (setEmailId(e.target.value, setError("")))}
+                />
+              </fieldset>
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Password</legend>
+                <input
+                  type="password"
+                  value={password}
+                  className="input"
+                  onChange={(e) => (setPassword(e.target.value), setError(""))}
+                />
+              </fieldset>
+            </div>
+            <p className="text-error mx-auto">{error}</p>
+            <div className="card-actions justify-center py-4">
+              <button
+                className="btn btn-primary"
+                disabled={!emailId || !password}
+                onClick={handleLogin}
+              >
+                Login
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      {showToast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-error">
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
