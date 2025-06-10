@@ -5,33 +5,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
 const NavBar = () => {
-    const [theme, setTheme] = useState("dracula");
-    const dispatch = useDispatch();
+  const [theme, setTheme] = useState("dracula");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-    const toggleTheme = () => {
-      const newTheme = theme === "dracula" ? "light" : "dracula";
-      setTheme(newTheme);
-      document.documentElement.setAttribute("data-theme", newTheme);
-    };
-  
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dracula" ? "light" : "dracula";
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
   // setting up profile-img
   const user = useSelector((store) => store.user);
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_SERVER_BACKEND_BASEURL}/logout`, {}, { withCredentials: true });
+      await axios.post(
+        `${import.meta.env.VITE_SERVER_BACKEND_BASEURL}/logout`,
+        {},
+        { withCredentials: true }
+      );
       dispatch(removeUser());
       return navigate("/login");
     } catch (error) {
-      console.log(error);      
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl gap-2">🧑‍💻 DevTinder</Link>
+        <Link to="/" className="btn btn-ghost text-xl gap-2">
+          🧑‍💻 DevTinder
+        </Link>
       </div>
 
       <div className="flex gap-3 items-center">
@@ -77,6 +83,9 @@ const NavBar = () => {
                 <Link to="/connections">Connections</Link>
               </li>
               <li>
+                <Link to="/requests">Pending Requests</Link>
+              </li>
+              <li>
                 <Link onClick={handleLogout}>Logout</Link>
               </li>
             </ul>
@@ -85,6 +94,6 @@ const NavBar = () => {
       </div>
     </div>
   );
-}
+};
 
-export default NavBar
+export default NavBar;
