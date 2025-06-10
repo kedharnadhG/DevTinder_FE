@@ -34,33 +34,33 @@ const Connections = () => {
     );
 
   return (
-    <div className="text-center my-10">
-      <h1 className="text-3xl  font-bold">Connections</h1>
+    <div className="text-center my-10 overflow-y-auto min-h-screen p-4">
+      <h1 className="text-3xl font-bold">Connections</h1>
+
       {connections.map((connection) => {
         const { _id, firstName, lastName, photoUrl, age, gender, about } =
           connection;
+
         return (
           <div
             key={_id}
-            className="m-4 p-4 mx-auto rounded-lg w-1/2 bg-base-300 flex items-center"
+            className="m-4 p-4 mx-auto rounded-lg max-w-xl bg-base-300 flex flex-col sm:flex-row items-center gap-4"
           >
-            <div>
-              <img
-                src={photoUrl}
-                alt="photo"
-                className="rounded-full w-[100px] h-[100px]"
-              />
-            </div>
-            <div className="text-left mx-4">
+            <img
+              src={photoUrl}
+              alt="photo"
+              className="rounded-full w-[100px] h-[100px] object-cover"
+            />
+            <div className="text-left">
               <h1 className="text-2xl font-bold">
                 {firstName} {lastName}
               </h1>
               {age && gender && (
-                <p>
+                <p className="text-sm text-gray-500">
                   {age} | {gender}
                 </p>
               )}
-              <p className="text-left text-wrap">{about}</p>
+              <p className="text-wrap">{about}</p>
             </div>
           </div>
         );

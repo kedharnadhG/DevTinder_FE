@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  //TODO: modify the State
-  const [emailId, setEmailId] = useState("akshay@gmail.com");
-  const [password, setPassword] = useState("Akshay@098");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const [isLoginForm, setIsLoginForm] = useState(true);
+
   const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const user = useSelector((store) => store.user);
 
   const handleLogin = async () => {
     try {
@@ -25,7 +31,8 @@ const Login = () => {
       );
       // console.log(res.data.data.user);
       dispatch(addUser(res.data?.data?.user));
-      navigate("/");
+      return navigate("/");
+      // setTimeout(() => window.location.reload(), 1000);
     } catch (err) {
       setError(err?.response?.data || "Something went wrong");
       setShowToast(true);
@@ -35,20 +42,78 @@ const Login = () => {
     }
   };
 
+  const handleSignup = async () => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_SERVER_BACKEND_BASEURL}/signup`,
+        {
+          firstName,
+          lastName,
+          emailId,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      const newUser = res.data?.data?.savedUser;
+
+      dispatch(addUser(newUser));
+      return navigate("/profile");
+    } catch (err) {
+      setError(err?.response?.data || "Something went wrong");
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+      navigate("/login");
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      if (isLoginForm) navigate("/");
+      else navigate("/profile");
+    }
+  }, [user, navigate]);
+
   return (
     <>
       <div className="flex justify-center mt-10">
         <div className="card bg-base-300 w-96 shadow-sm">
           <div className="card-body">
-            <h2 className="card-title justify-center">Login</h2>
+            <h2 className="card-title justify-center">
+              {isLoginForm ? "Login" : "Sign Up"}
+            </h2>
             <div className="mb-2">
+              {!isLoginForm && (
+                <>
+                  <fieldset className="fieldset">
+                    <legend className="fieldset-legend">First Name</legend>
+                    <input
+                      type="text"
+                      value={firstName}
+                      className="input"
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </fieldset>
+                  <fieldset className="fieldset">
+                    <legend className="fieldset-legend">Last Name</legend>
+                    <input
+                      type="text"
+                      value={lastName}
+                      className="input"
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </fieldset>
+                </>
+              )}
               <fieldset className="fieldset">
                 <legend className="fieldset-legend">Email ID</legend>
                 <input
                   type="text"
                   value={emailId}
                   className="input"
-                  onChange={(e) => (setEmailId(e.target.value, setError("")))}
+                  onChange={(e) => setEmailId(e.target.value, setError(""))}
                 />
               </fieldset>
               <fieldset className="fieldset">
@@ -65,12 +130,25 @@ const Login = () => {
             <div className="card-actions justify-center py-4">
               <button
                 className="btn btn-primary"
-                disabled={!emailId || !password}
-                onClick={handleLogin}
+                disabled={
+                  isLoginForm
+                    ? !emailId || !password
+                    : !firstName || !lastName || !emailId || !password
+                }
+                onClick={isLoginForm ? handleLogin : handleSignup}
               >
-                Login
+                {isLoginForm ? "Login" : "Sign Up"}
               </button>
             </div>
+
+            <p
+              className="text-center hover:cursor-pointer"
+              onClick={() => setIsLoginForm(!isLoginForm)}
+            >
+              {isLoginForm
+                ? "New User? Sign Up Here"
+                : "Existing User? Login Here"}{" "}
+            </p>
           </div>
         </div>
       </div>

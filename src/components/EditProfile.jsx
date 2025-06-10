@@ -7,11 +7,11 @@ import { addUser } from "../utils/userSlice";
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [age, setAge] = useState(user?.age);
-  const [gender, setGender] = useState(user?.gender);
-  const [about, setAbout] = useState(user?.about);
   const [photoUrl, setPhotoUrl] = useState(user?.photoUrl);
-  const [skills, setskills] = useState(user?.skills);
+  const [age, setAge] = useState(user?.age || "");
+  const [gender, setGender] = useState(user?.gender || "");
+  const [about, setAbout] = useState(user?.about );
+  const [skills, setskills] = useState(user?.skills || []);
   const [error, setError] = useState("");
   const [showToast, setShowToast] = useState(false);
 
@@ -55,7 +55,7 @@ const EditProfile = ({ user }) => {
 
   return (
     <>
-      <div className="flex justify-center my-3">
+      <div className="flex justify-center md:flex-row items-center gap-4 flex-col min-h-screen  my-3">
         <div className="flex justify-center mx-10">
           <div className="card bg-base-300 w-96 shadow-sm">
             <div className="card-body">
@@ -91,7 +91,7 @@ const EditProfile = ({ user }) => {
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend">Age</legend>
                   <input
-                    type="text"
+                    type="number"
                     value={age}
                     className="input"
                     onChange={(e) => setAge(e.target.value)}
