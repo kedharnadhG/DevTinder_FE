@@ -14,7 +14,6 @@ const Connections = () => {
         `${import.meta.env.VITE_SERVER_BACKEND_BASEURL}/user/connections`,
         { withCredentials: true }
       );
-      console.log(res?.data?.data);
       dispatch(addConnections(res?.data?.data));
     } catch (err) {
       console.log(err);
@@ -28,7 +27,11 @@ const Connections = () => {
   if (!connections) return;
 
   if (connections.length === 0)
-    return <h1 className="text-2xl font-bold">No connections Found</h1>;
+    return (
+      <h1 className="text-2xl font-bold text-center my-10 ">
+        No connections Found
+      </h1>
+    );
 
   return (
     <div className="text-center my-10">
