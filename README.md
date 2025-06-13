@@ -52,7 +52,7 @@
 - Install Node version 18.17.1 (where your app working fine right now)
 - git clone the FE & BE repositories to the EC2 instance
 
-- Frontend
+- Frontend (cd to FE folder)
 
   - npm install (installs dependencies)
   - npm run build
@@ -67,14 +67,17 @@
     (we have to add Inbound-rule for port 80 for to access it)
 
 - Backend
-  (create and update the .env file in the BE folder of remote machine)
+
+  - npm install
+  - (create and update the .env file in the BE folder of remote machine) (ctrl+o -> save, + Enter + ctrl_x -> exit)
 
   - allowed EC2 instance public IP on mongodb server (whitelisting)
+  - add in-Bound rule for the BE-Port also
   - npm install pm2 -g
-  - pm2 start npm --name "devTinder-backend" -- start
+  - pm2 start npm --name "devTinder-backend" -- start (cd to BE folder)
   - pm2 logs (to check the logs)
   - pm2 flush <Process_Name> -> for to clear the logs
-  - pm2 list (list of processes), om2 stop <Process_Name>, pm2 delete <Process_Name>
+  - pm2 list (list of processes), pm2 stop <Process_Name>, pm2 delete <Process_Name>
 
 # nginx config :
 
@@ -88,7 +91,7 @@ Backend = devtinder.com:7777 (? do we really want this ) (bst pract is mapping t
 
 (for this mapping we use nginx)
 
-- config nginx -> sudo nano /etc/nginx/sites-available/default
+- config nginx -> sudo nano /etc/nginx/sites-available/default (copy paste below config)
 - (after configuring nginx)
   ubuntu@ip-172-31-32-233:~$ sudo nginx -t
   nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
@@ -126,11 +129,74 @@ nginx config :
 
       (A)    cloudflare give free SSL (https) & it is  a CDN (content delivery network) (it is also a caching server) whereas godaddy is a registrar (it is not a caching server)
 
- - DNS record: A -> devtinder.in (ip-address of the EC2 instance) 
+- DNS record: A -> devtinder.in (ip-address of the EC2 instance)
 
- - Enable flexible SSL for website (HW: Q-> How to enable Full-SSS? )
+- Enable flexible SSL for website (HW: Q-> How to enable Full-SSS? )
 
- 
+# Sending Emails via SES
+
+    - Create a IAM user
+    - Give Access to AmazonSES FullAccess
+    - Amazon SES : Create an Identity
+    - Verify the domain name
+    - Verify the email address Identity (mandatory)
+
+    - Install AWS SDK - v3
+
+    - Code Examples:
+
+        (https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javascriptv3/example_code/ses#code-examples)
+
+        (https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/javascript_ses_code_examples.html)
+
+    - Setup SesClient
+    - Access Credentials should be created in IAM (in security credentials tab of a IAM-User)
+    - add the credentials to the env file
+    - Write code for SESClient
+    - Write code for Sending email address
+    - Make the email dynamic by passing more params to the run function
+
+# Scheduling cron-jobs in NodeJS
+
+- Install node-cron
+- Learn about cron-expression syntax - crontab.guru
+- Schedule a job
+- date-fns
+- Find all the unique emailIds who have got connection-requests in previous day
+- Send email to those users
+- Explore: Queue-mechanisn to send bulk-emails
+- Amazon SES Bulk-emails
+- Make sendEmail function dynamic (use a templare for sending email)
+- bee-queue & bull (queue-mechanism npm-packages)
+
+---
+
+# Razorpay Payment Gateway Integration
+
+    - Sign up on Razorpay & complete KYC
+
+---
+
+# Reql Time Chat using WebSocket (Socket.io)
+
+    - Build th UI for a chat window on /chat/:targetUserId
+    - Setup socket.io in backend
+    - npm i socket.io
+    - npm i socket.io-client
+    - Initialize the chat
+    - Create a socket connection
+    - Create room for the chat
+    - Listen to events
+    - Emit events
+    - Receive emitted messages in the UI
+    - Send messages...
+
+    - HOME WORK:  Fix Security Bug:  -- auth in web sockets
+    - HOME WORK:  feat: Show Green Symbol if user is online???? - [last seen 2 hours ago]..
+    - HOME WORK:  Limit messages when fetching from DB
+    - Project Ideas: Tic Tac Toe game
+    - Project Idea 2: Chess game
+    - Project Idea 3: TypeRacer game
 
 
 ---

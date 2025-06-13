@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "../utils/connectionSlice";
+import { Link } from "react-router-dom";
 
 const Connections = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const Connections = () => {
         return (
           <div
             key={_id}
-            className="m-4 p-4 mx-auto rounded-lg max-w-xl bg-base-300 flex flex-col sm:flex-row items-center gap-4"
+            className="m-4 p-4 mx-auto justify-between rounded-lg max-w-xl bg-base-300 flex flex-col sm:flex-row items-center gap-4"
           >
             <img
               src={photoUrl}
@@ -62,6 +63,10 @@ const Connections = () => {
               )}
               <p className="text-wrap">{about}</p>
             </div>
+            <Link to={`/chat/${_id}`}>
+              {" "}
+              <button className="btn btn-secondary ">Chat</button>{" "}
+            </Link>
           </div>
         );
       })}
